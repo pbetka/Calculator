@@ -28,6 +28,10 @@
   
   var firstNumber = null;
 
+  var isOperationNew = false;
+
+  var lastNumber = null;
+
 $(document).ready(function() {
     $("input").inputFilter(function(value) {
         return /^\-?\d*\.?\d*$/.test(value);
@@ -36,6 +40,7 @@ $(document).ready(function() {
 //Addition
 
     $("#addition").click(function(){
+        isOperationNew = true;
         firstNumber = $("input:text").val();
         $("input:text").val("");
         operation = "+";
@@ -45,6 +50,7 @@ $(document).ready(function() {
 //Subtraction
 
     $("#subtraction").click(function(){
+        isOperationNew = true;
         firstNumber = $("input:text").val();
         $("input:text").val("");
         operation = "-";
@@ -54,6 +60,7 @@ $(document).ready(function() {
 //Multiplication
 
     $("#multiplication").click(function(){
+        isOperationNew = true;
         firstNumber = $("input:text").val();
         $("input:text").val("");
         operation = "×";
@@ -63,6 +70,7 @@ $(document).ready(function() {
 //Division
 
     $("#division").click(function(){
+        isOperationNew = true;
         firstNumber = $("input:text").val();
         $("input:text").val("");
         operation = "÷";
@@ -72,23 +80,33 @@ $(document).ready(function() {
 //Equal
 
     $("#equal").click(function(){
-        oldMemory = $("#memory").text()
-        $("#memory").text(oldMemory + " " + $("input:text").val() + " = ");
+        if(isOperationNew) {
+            lastNumber = parseFloat($("input:text").val())
+            oldMemory = $("#memory").text()
+            $("#memory").text(oldMemory + " " + $("input:text").val() + " = ");
+        }
+        else
+            $("#memory").text(firstNumber + " " + operation + " " + lastNumber + " = ");
+        
         switch(operation) {
             case "+":
-                result = parseFloat(firstNumber) + parseFloat($("input:text").val());
+                result = parseFloat(firstNumber) + lastNumber;
                 break;
             case "-":
-                result = parseFloat(firstNumber) - parseFloat($("input:text").val());
+                result = parseFloat(firstNumber) - lastNumber;
                 break;
             case "×":
-                result = parseFloat(firstNumber) * parseFloat($("input:text").val());
+                result = parseFloat(firstNumber) * lastNumber;
                 break;
             case "÷":
-                result = parseFloat(firstNumber) / parseFloat($("input:text").val());
+                result = parseFloat(firstNumber) / lastNumber;
                 break;
         }
         $("input:text").val(result);
+        
+        firstNumber = result;
+        
+        isOperationNew = false;
     });
 
 //Numbers
